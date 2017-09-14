@@ -8,7 +8,13 @@
 
 import RealmSwift
 
-class list: Object {
+class list1: Object {
     
     dynamic var listName = ""
+    dynamic var id : Int = 0
+    
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+    
 }
