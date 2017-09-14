@@ -38,41 +38,28 @@ class ViewController: UIViewController {
         print(Realm.Configuration.defaultConfiguration.fileURL ?? "*** No URL ***")
         
         print("Start .....")
-        insertTheValue()
+        
     }
     
-    func insertTheValue() {
+    func insertTheValue( NewValue : String) {
         
-        if categories.count == 0 { // 1
-        
-            try! realm.write() { // 2
-                
-                let defaultCategories = ["Birds", "Mammals", "Flora", "Reptiles", "Arachnids" ] // 3
-                let PrimaryCount = [1,2,3,4,5]
-                var i = 0
-                
-                for category in defaultCategories  { // 4
-                    let newCategory = list1()
-                    newCategory.listName = category
-                    newCategory.id = PrimaryCount[i]
-                    realm.add(newCategory)
-                    i += 1
-                }
-            }
+        try! realm.write() {
             
-            categories = realm.objects(list1.self) // 5
-            print(categories)
+            let newCategory = list1()
+            newCategory.listName = NewValue
+            newCategory.id = categories.count+1
+            
+            realm.add(newCategory)
         }
 
+        self.TableView.reloadData()
+        categories = realm.objects(list1.self) // 5
+        
     }
     
     @IBAction func GetActionButton(_ sender: Any) {
         
-        var str = ""
-        for index in 0..<RealmObject.count {
-            str += "\(RealmObject[index])\n"
-        }
-        self.TextView.text = str
+        alertAction(Title: "Enter the Value", Message: "", updateValue: "", Type: "New")
     }
     
     
@@ -103,6 +90,38 @@ class ViewController: UIViewController {
             self.TableView.reloadData()
         })
     }
+    
+    func alertAction(Title : String, Message : String, updateValue : String, Type: String) {
+        
+        let alertController = UIAlertController(title: Title, message: Message, preferredStyle: .alert)
+        
+        let saveAction = UIAlertAction(title: "Save", style: .default, handler: {
+            alert -> Void in
+            
+            let firstTextField = alertController.textFields![0] as UITextField
+            if Type == "Edit"{
+                self.editTheValue(PredicedValue: updateValue, UpdatedValue: firstTextField.text!)
+            }else{
+                self.insertTheValue(NewValue: firstTextField.text!)
+            }
+            
+        })
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: {
+            (action : UIAlertAction!) -> Void in })
+        
+        alertController.addTextField { (textField : UITextField!) -> Void in
+            textField.placeholder = "Enter the Value"
+        }
+        
+        
+        alertController.addAction(saveAction)
+        alertController.addAction(cancelAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+
+    }
+    
 
 }
 
@@ -127,12 +146,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
-        
 
         let editButtonTap = UITableViewRowAction(style: .normal, title: "Edit") { action, index in
 
             let detail = self.RealmObject[editActionsForRowAt.row].listName
-            self.editTheValue(PredicedValue: detail, UpdatedValue: "")
+            self.alertAction(Title: "Add New Value", Message: "", updateValue: detail, Type: "Edit")
 
         }
         editButtonTap.backgroundColor = .lightGray
@@ -142,7 +160,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
             
             let detail = self.RealmObject[editActionsForRowAt.row]
             self.deleteTheValue(PredicatedValue: detail)
-            self.TableView.deleteRows(at: [editActionsForRowAt], with: .fade)
             
         }
         share.backgroundColor = .blue

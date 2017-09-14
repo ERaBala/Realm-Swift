@@ -1,0 +1,23 @@
+
+// Insert the Array Value in Realm
+
+if categories.count == 0 { // 1
+
+    try! realm.write() { // 2
+
+        let defaultCategories = ["Birds", "Mammals", "Flora", "Reptiles", "Arachnids" ] // 3
+        let PrimaryCount = [1,2,3,4,5]
+        var i = 0
+
+        for category in defaultCategories  { // 4
+            let newCategory = list1()
+            newCategory.listName = category
+            newCategory.id = PrimaryCount[i]
+            realm.add(newCategory)
+            i += 1
+        }
+    }
+
+    categories = realm.objects(list1.self) // 5
+    print(categories)
+}
