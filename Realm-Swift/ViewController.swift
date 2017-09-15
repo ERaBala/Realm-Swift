@@ -23,31 +23,29 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
         
         TableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         
-        // This view controller itself will provide the delegate methods and row data for the table view.
+        
         TableView.delegate = self
         TableView.dataSource = self
         
         let PrimaryCount = [1,2,3,4,5]
         print(PrimaryCount.map{$0})
 
+        // Get Realm Storage Location
         print(Realm.Configuration.defaultConfiguration.fileURL ?? "*** No URL ***")
-        
-        print("Start .....")
         
     }
     
+    // Inser the Value
     func insertTheValue( NewValue : String) {
         
         try! realm.write() {
             
             let newCategory = list1()
             newCategory.listName = NewValue
-            newCategory.id = categories.count+1
+            newCategory.id = Int(arc4random_uniform(999))
             
             realm.add(newCategory)
         }
@@ -57,17 +55,11 @@ class ViewController: UIViewController {
         
     }
     
-    @IBAction func GetActionButton(_ sender: Any) {
-        
-        alertAction(Title: "Enter the Value", Message: "", updateValue: "", Type: "New")
-    }
-    
-    
     // Update the Value
-    func editTheValue( PredicedValue: String, UpdatedValue : String) {
+    func editTheValue( PredicedValue: Int, UpdatedValue : String) {
         print( PredicedValue, UpdatedValue)
         
-        let workouts = self.RealmObject.filter("listName = %@", PredicedValue)
+        let workouts = self.RealmObject.filter("id = %@", PredicedValue)
         
         let realm = try! Realm()
         if let workout = workouts.first {
@@ -91,7 +83,12 @@ class ViewController: UIViewController {
         })
     }
     
-    func alertAction(Title : String, Message : String, updateValue : String, Type: String) {
+    @IBAction func GetActionButton(_ sender: Any) {
+        
+        alertAction(Title: "Enter the Value", Message: "", updateValue: 0, Type: "New")
+    }
+    
+    func alertAction(Title : String, Message : String, updateValue : Int, Type: String) {
         
         let alertController = UIAlertController(title: Title, message: Message, preferredStyle: .alert)
         
@@ -122,7 +119,6 @@ class ViewController: UIViewController {
 
     }
     
-
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource{
@@ -149,7 +145,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
 
         let editButtonTap = UITableViewRowAction(style: .normal, title: "Edit") { action, index in
 
-            let detail = self.RealmObject[editActionsForRowAt.row].listName
+            let detail = self.RealmObject[editActionsForRowAt.row].id
             self.alertAction(Title: "Add New Value", Message: "", updateValue: detail, Type: "Edit")
 
         }
