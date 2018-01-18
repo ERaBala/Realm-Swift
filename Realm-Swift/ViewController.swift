@@ -10,7 +10,7 @@ import UIKit
 import RealmSwift
 
 let realm = try! Realm()
-var categories: Results<list1> = { realm.objects(list1.self) }()
+var categories: Results<list> = { realm.objects(list.self) }()
 
 class ViewController: UIViewController {
     
@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var TableView: UITableView!
     
     let cellReuseIdentifier = "cell"
-    let RealmObject = realm.objects(list1.self)
+    let RealmObject = realm.objects(list.self)
 
     
     override func viewDidLoad() {
@@ -43,7 +43,7 @@ class ViewController: UIViewController {
         
         try! realm.write() {
             
-            let newCategory = list1()
+            let newCategory = list()
             newCategory.listName = NewValue
             newCategory.id = Int(arc4random_uniform(999))
             
@@ -51,7 +51,7 @@ class ViewController: UIViewController {
         }
 
         self.TableView.reloadData()
-        categories = realm.objects(list1.self) // 5
+        categories = realm.objects(list.self) // 5
         
     }
     

@@ -8,7 +8,7 @@
 
 import RealmSwift
 
-class list1: Object {
+class list: Object {
     
     dynamic var listName = ""
     dynamic var id : Int = 0
