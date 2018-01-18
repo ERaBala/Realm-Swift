@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E017DA1200F6579003BD662 /* FileDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E017DA0200F6579003BD662 /* FileDownload.swift */; };
+		2EEF682F2008A4E80060C67F /* DownloadSongsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEF682E2008A4E80060C67F /* DownloadSongsModel.swift */; };
 		77C86C0B33EB8B92EF840132 /* Pods_Realm_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E82A0F7CE72702ED61985D71 /* Pods_Realm_Swift.framework */; };
 		EE41DEDD1F6AB9C80094A86D /* Reference.txt in Resources */ = {isa = PBXBuildFile; fileRef = EE41DEDC1F6AB9C80094A86D /* Reference.txt */; };
 		EE969A051F69595E00C55820 /* RealmFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE969A041F69595E00C55820 /* RealmFile.swift */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2E017DA0200F6579003BD662 /* FileDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownload.swift; sourceTree = "<group>"; };
+		2EEF682E2008A4E80060C67F /* DownloadSongsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadSongsModel.swift; sourceTree = "<group>"; };
 		55015B25918AF0DAD407C5FA /* Pods-Realm-Swift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Realm-Swift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Realm-Swift/Pods-Realm-Swift.debug.xcconfig"; sourceTree = "<group>"; };
 		C6F94B37F3E4366034333510 /* Pods-Realm-Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Realm-Swift.release.xcconfig"; path = "Pods/Target Support Files/Pods-Realm-Swift/Pods-Realm-Swift.release.xcconfig"; sourceTree = "<group>"; };
 		E82A0F7CE72702ED61985D71 /* Pods_Realm_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Realm_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				EE969A041F69595E00C55820 /* RealmFile.swift */,
+				2EEF682E2008A4E80060C67F /* DownloadSongsModel.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -112,6 +117,7 @@
 				EE969A031F69588400C55820 /* Model */,
 				EEEB7F651F69303D003526DD /* AppDelegate.swift */,
 				EEEB7F671F69303D003526DD /* ViewController.swift */,
+				2E017DA0200F6579003BD662 /* FileDownload.swift */,
 				EE41DEDE1F6ABA470094A86D /* Asset */,
 				EE41DEDF1F6ABA510094A86D /* OtherFiles */,
 			);
@@ -216,11 +222,13 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Realm-Swift/Pods-Realm-Swift-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 			);
@@ -253,6 +261,8 @@
 			files = (
 				EEEB7F681F69303D003526DD /* ViewController.swift in Sources */,
 				EEEB7F661F69303D003526DD /* AppDelegate.swift in Sources */,
+				2E017DA1200F6579003BD662 /* FileDownload.swift in Sources */,
+				2EEF682F2008A4E80060C67F /* DownloadSongsModel.swift in Sources */,
 				EE969A051F69595E00C55820 /* RealmFile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
