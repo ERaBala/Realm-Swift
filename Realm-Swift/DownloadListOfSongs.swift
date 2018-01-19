@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
+import RealmSwift
 
 protocol DownloadAction {
     func DownloadTheSongURL(SongURL : IndexPath)
@@ -37,8 +38,65 @@ extension DownloadListOfSongs : DownloadAction {
         
         let DownloadSongJson = json[SongURL.row]
         
-        self.DownloadTheSongs(songURL: DownloadSongJson["songfile"].string!)
-        /*  artistname, songid, image_url, songfile, songname, genrename, albumname */
+        insertObject(AlbumName: DownloadSongJson["albumname"].string!,ArtistName: DownloadSongJson["artistname"].string!,ImageURL: DownloadSongJson["image_url"].string!,SongName: DownloadSongJson["songname"].string!,GenreType: DownloadSongJson["genrename"].string!,SongURL: DownloadSongJson["songfile"].string!,SongID: DownloadSongJson["songid"].string!, SongStroedPath: "" )
+        
+        
+    }
+    
+    func insertObject( AlbumName : String, ArtistName : String, ImageURL : String, SongName : String, GenreType : String, SongURL : String, SongID : String, SongStroedPath : String ){
+        
+        let songDetails = DownloadSongsModel()
+        
+        if SongID != "" {
+            songDetails.SongID = SongID
+        }
+        
+        if AlbumName != "" {
+            songDetails.Album = AlbumName
+        }
+        
+        if ArtistName != "" {
+            songDetails.Artist = ArtistName
+        }
+        
+        if ImageURL != "" {
+            
+            let url = NSURL(string: ImageURL)!
+            
+            if let imgData = NSData(contentsOf: url as URL) {
+                // Storing image in documents folder (Swift 2.0+)
+                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+               
+                let writePath = (documentsPath as NSString).appendingPathComponent("SongImage\(SongID).jpg")
+
+                imgData.write(toFile: writePath, atomically: true)
+
+                songDetails.Image = writePath
+            }
+            
+        }
+        
+        if SongName != "" {
+            songDetails.Title = SongName
+        }
+        
+        if GenreType != "" {
+            songDetails.genre = GenreType
+        }
+        
+        if SongURL != "" {
+            songDetails.DownloadUrl = SongURL
+        }
+        
+        if SongStroedPath != "" {
+            songDetails.LocalUrl = SongStroedPath
+        }
+        
+        try! realm.write() {
+            realm.add(songDetails)
+            
+            self.DownloadTheSongs(songURL: SongURL)
+        }
     }
     
     func DownloadTheSongs( songURL : String){
@@ -57,8 +115,18 @@ extension DownloadListOfSongs : DownloadAction {
                 //here you able to access the DefaultDownloadResponse
                 //result closure
                 
-                let localURL = DefaultDownloadResponse.destinationURL
-                let WebURL = DefaultDownloadResponse.response?.url
+                let localURL = DefaultDownloadResponse.destinationURL!
+                let WebURL =  DefaultDownloadResponse.response?.url?.absoluteString
+                
+                let songDetails = self.RealmObject.filter("DownloadUrl = %@", WebURL!)
+                
+                let realm = try! Realm()
+                if let workout = songDetails.first {
+                    try! realm.write {
+                        
+                        workout.LocalUrl = "\(String(describing: localURL))"
+                    }
+                }
                 
                 print("the downloaded path == \(String(describing: localURL))\nActual URL == \(String(describing: WebURL))")
             })
@@ -66,13 +134,13 @@ extension DownloadListOfSongs : DownloadAction {
 }
 
 // MARK:- Tomarrow Task
-// Tomaro Task - store the values in database (func DownloadTheSongURL)
-// compare the WebURL and store localURL in Database
-// if localURL have value show in list
+// need to list the Songs & Play song & change download button progress.
 
 class DownloadListOfSongs: UIViewController {
 
     var JsonObject  : [String : AnyObject] = [:]
+    
+    let RealmObject = realm.objects(DownloadSongsModel.self)
 
     var mainArrayObject = [String]()
     
@@ -83,11 +151,13 @@ class DownloadListOfSongs: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        JsonObject["userid"] = "5" as AnyObject
-        JsonObject["uuid"] = "vugiyuqgweiyfgyigwqefhgiuweqiufh" as AnyObject
-        JsonObject["device"] = "ios" as AnyObject
-        JsonObject["ipaddress"] = "192.168.0.0" as AnyObject
-        JsonObject["pagination"] = "0" as AnyObject
+        print(Realm.Configuration.defaultConfiguration.fileURL ?? "*** No URL ***")
+
+        JsonObject["userid"]        = "5" as AnyObject
+        JsonObject["uuid"]          = "vugiyuqgweiyfgyigwqefhgiuweqiufh" as AnyObject
+        JsonObject["device"]        = "ios" as AnyObject
+        JsonObject["ipaddress"]     = "192.168.0.0" as AnyObject
+        JsonObject["pagination"]    = "0" as AnyObject
         
         self.libraryMethod(dictParam: JsonObject)
     }
@@ -97,6 +167,9 @@ class DownloadListOfSongs: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func InsertTheValues(){
+        
+    }
 
     func libraryMethod(dictParam : Dictionary<String, AnyObject>){
         

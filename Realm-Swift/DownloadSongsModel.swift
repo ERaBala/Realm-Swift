@@ -9,10 +9,8 @@
 import RealmSwift
 
 class DownloadSongsModel: Object {
-
-    dynamic var url: String = ""
     
-    dynamic var Id          = ""    // songid
+    dynamic var SongID      = ""    // songid
     dynamic var Title       = ""    // songname
     dynamic var Artist      = ""    // artistname
     dynamic var Album       = ""    // albumname
@@ -20,7 +18,7 @@ class DownloadSongsModel: Object {
     dynamic var Description = ""    //
     dynamic var DownloadUrl = ""    // songfile
     dynamic var LocalUrl    = ""    //  ----- docuent directory file url
-    dynamic var Image : NSData?     // image_url
+    dynamic var Image       = ""     // image_url
 
     dynamic var isDownloading = false
 

@@ -26,7 +26,6 @@ class ViewController: UIViewController {
         
         TableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         
-        
         TableView.delegate = self
         TableView.dataSource = self
         
