@@ -38,18 +38,16 @@ extension DownloadListOfSongs : DownloadAction {
         
         let DownloadSongJson = json[SongURL.row]
         
-        insertObject(AlbumName: DownloadSongJson["albumname"].string!,ArtistName: DownloadSongJson["artistname"].string!,ImageURL: DownloadSongJson["image_url"].string!,SongName: DownloadSongJson["songname"].string!,GenreType: DownloadSongJson["genrename"].string!,SongURL: DownloadSongJson["songfile"].string!,SongID: DownloadSongJson["songid"].string!, SongStroedPath: "" )
+        insertObject(AlbumName: DownloadSongJson["albumname"].string!,ArtistName: DownloadSongJson["artistname"].string!,ImageURL: DownloadSongJson["image_url"].string!,SongName: DownloadSongJson["songname"].string!,GenreType: DownloadSongJson["genrename"].string!,SongURL: DownloadSongJson["songfile"].string!,SongID: DownloadSongJson["songid"].string! )
         
         
     }
     
-    func insertObject( AlbumName : String, ArtistName : String, ImageURL : String, SongName : String, GenreType : String, SongURL : String, SongID : String, SongStroedPath : String ){
+    func insertObject( AlbumName : String, ArtistName : String, ImageURL : String, SongName : String, GenreType : String, SongURL : String, SongID : String ){
         
         let songDetails = DownloadSongsModel()
         
-        if SongID != "" {
-            songDetails.SongID = SongID
-        }
+        var SongURLAppend : String = "http://omniprotechnologies.com/dev/musicapp/dev/iosdownloads.php?song=\(SongURL)"
         
         if AlbumName != "" {
             songDetails.Album = AlbumName
@@ -84,22 +82,37 @@ extension DownloadListOfSongs : DownloadAction {
             songDetails.genre = GenreType
         }
         
-        if SongURL != "" {
-            songDetails.DownloadUrl = SongURL
-        }
-        
-        if SongStroedPath != "" {
-            songDetails.LocalUrl = SongStroedPath
+        if SongID != "" {
+            
+            songDetails.SongID = SongID
+            
+            let SongsCount = realm.objects(DownloadSongsModel.self).filter("SongID == %@", SongID)
+            print(SongsCount.count)
+            
+            SongURLAppend += "/\(SongsCount.count)"
+            
+            if SongURLAppend != "" {
+                
+                songDetails.DownloadUrl = SongURLAppend
+            }
         }
         
         try! realm.write() {
             realm.add(songDetails)
-            
-            self.DownloadTheSongs(songURL: SongURL)
+            print(SongURLAppend)
+            self.DownloadTheSongs(songURL: SongURLAppend)
         }
     }
     
     func DownloadTheSongs( songURL : String){
+        
+//        let theFileName = (songURL as NSString).lastPathComponent
+//
+//        let pathExtention = (songURL as NSString).pathExtension
+//        let pathPrefix = (songURL as NSString).deletingLastPathComponent
+//
+//
+//        print("print the URL \(theFileName) - \(pathExtention) - \(pathPrefix)")
         let destination = DownloadRequest.suggestedDownloadDestination(for: .documentDirectory)
         
         Alamofire.download(
